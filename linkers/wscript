@@ -35,6 +35,8 @@ def configure(conf):
     conf.load('compiler_c')
     conf.load('compiler_cxx')
     conf.write_config_header('config.h')
+    conf.check(lib='bfd', uselib_store='BFD')
+    conf.check(lib='iberty', uselib_store='LIBERTY')
 
 def build(bld):
     #
@@ -179,6 +181,17 @@ def build(bld):
                 cxxflags = conf['cxxflags'] + conf['warningflags'],
                 linkflags = conf['linkflags'],
                 use = modules)
+    
+    #
+    # Build the xsyms tool (for Cexpsh)
+    #
+    bld.program(target='rtems-xsyms',
+                source = ['xsyms/xsyms.c'],
+                defines = defines,
+                includes = ['.'],
+                cflags = conf['cflags'] + conf['warningflags'],
+                linkflags = conf['linkflags'],
+                use = ['LIBERTY', 'BFD'])
 
 def tags(ctx):
     ctx.exec_command('etags $(find . -name \\*.[sSch])', shell = True)
