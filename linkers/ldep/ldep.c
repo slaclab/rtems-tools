@@ -857,6 +857,8 @@
                      case 'S':
                      case 'A':
                      case 'C':
+                     case 'i':
+                     case 'I':
                      case 'N': /* only get here for 'N' if !force */
  
                                add_export(obj, sym, otype, size);
