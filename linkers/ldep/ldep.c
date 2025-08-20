@@ -331,7 +331,7 @@
  
      if (len > avail) {
          avail = STRCHUNK;
-         assert( buf=malloc(avail) );
+         assert( (buf=malloc(avail)) );
      }
  
      rval   = buf;
@@ -431,9 +431,9 @@
  libcmp(const char *a, const char *b)
  {
  register char *tmp;
-     if ( tmp = strrchr(a,'/') )
+     if ( (tmp = strrchr(a,'/')) )
          a = tmp+1;
-     if ( tmp = strrchr(b,'/') )
+     if ( (tmp = strrchr(b,'/')) )
          b = tmp+1;
      return strcmp(a,b);
  }
@@ -504,8 +504,8 @@
  {
  Lib	rval;
  
-     assert( rval = calloc(1, sizeof(*rval)) );
-     assert( rval->name = stralloc(strlen(name) + 1) );
+     assert( (rval = calloc(1, sizeof(*rval))) );
+     assert( (rval->name = stralloc(strlen(name) + 1)) );
      strcpy( rval->name, name );
      if (libListTail)
          libListTail->next = rval;
@@ -540,7 +540,7 @@
          }
      }
      i = l->nfiles+1;
-     assert( l->files = realloc(l->files, i * sizeof(*l->files)) );
+     assert( (l->files = realloc(l->files, i * sizeof(*l->files))) );
  
      l->files[l->nfiles] = obj;
      l->nfiles = i;
@@ -616,7 +616,7 @@
      if (!objn)
          exit(1); /* found an ill-formed name; fatal */
  
-     assert( obj = calloc(1, sizeof(*obj)) );
+     assert( (obj = calloc(1, sizeof(*obj))) );
  
      libobj = obj;
  
@@ -631,7 +631,7 @@
          obj = libobj;
      } else {
          /* build/copy name */
-         assert( obj->name = stralloc(strlen(objn) + 1) );
+         assert( (obj->name = stralloc(strlen(objn) + 1)) );
          strcpy( obj->name, objn );
  
          /* append to list of objects */
@@ -682,7 +682,7 @@
  Xref ex;
  
      obj->nexports++;
-     assert( obj->exports = realloc(obj->exports, sizeof(*obj->exports) * obj->nexports) );
+     assert( (obj->exports = realloc(obj->exports, sizeof(*obj->exports) * obj->nexports)) );
      /* check alignment with flags */
      assert( 0 == ((unsigned long)obj->exports & XREF_FLAGS) );
      ex = &obj->exports[obj->nexports - 1];
@@ -700,7 +700,7 @@
  Xref im;
  
      obj->nimports++;
-     assert( obj->imports = realloc(obj->imports, sizeof(*obj->imports) * obj->nimports) );
+     assert( (obj->imports = realloc(obj->imports, sizeof(*obj->imports) * obj->nimports)) );
      /* check alignment with flags */
      assert( 0 == ((unsigned long)obj->imports & XREF_FLAGS) );
      im = &obj->imports[obj->nimports - 1];
@@ -795,7 +795,7 @@
                      char *dot, *slash,*nmbuf;
                      fprintf(stderr,"Warning: Symbol without object file??\n");
  
-                     assert( nmbuf = malloc(strlen(name)+5) );
+                     assert( (nmbuf = malloc(strlen(name)+5)) );
  
                      strcpy( nmbuf, name );
                      slash = strrchr(nmbuf, '/');
@@ -813,7 +813,7 @@
                  }
  
                  if ( !nsym )
-                     assert( nsym = calloc(1,sizeof(*nsym)) );
+                     assert( (nsym = calloc(1,sizeof(*nsym))) );
  
                  nsym->name = buf;
  
@@ -823,7 +823,7 @@
                      size = 0;
                  }
  
-                 assert( found = (Sym*) tsearch(nsym, &symTbl, symcmp) );
+                 assert( (found = (Sym*) tsearch(nsym, &symTbl, symcmp)) );
                  if ( *found == nsym ) {
  #if DEBUG & DEBUG_TREE
                      fprintf(debugf,"Adding new symbol %s (found %p, sym %p)\n",(*found)->name, found, *found);
@@ -953,7 +953,7 @@
      for (i=0, imp=f->imports; i<f->nimports; i++, imp++) {
          register Sym *found;
          assert( 0 == XREF_NEXT(imp) );
-         assert (found = (Sym*)tfind( imp->sym, &symTbl, symcmp ));
+         assert ((found = (Sym*)tfind( imp->sym, &symTbl, symcmp )));
  
          /* add ourself to the importers of that symbol */
          xref_set_next(imp, (*found)->importedFrom);
@@ -998,7 +998,7 @@
      } else {
          printObjName(feil, ex->obj);
          fprintf(feil,"%s\n", XREF_WEAK(ex) ? " (WEAK)" : "");
-         while ( ex=XREF_NEXT(ex) ) {
+         while ( (ex=XREF_NEXT(ex)) ) {
              fprintf(feil,"      AND in object: ");
              printObjName(feil, ex->obj);
              fprintf(feil,"%s\n", XREF_WEAK(ex) ? " (WEAK)" : "");
@@ -1030,7 +1030,7 @@
          do {
              depwalk(imp->obj, depPrint, (void*)&arg, WALK_EXPORTS | WALK_BUILD_LIST);
              depwalkListRelease(imp->obj);
-         } while ( imp = XREF_NEXT(imp) );
+         } while ( (imp = XREF_NEXT(imp)) );
      } else {
          fprintf(feil," NONE\n");
      }
@@ -1266,7 +1266,7 @@
                  }
                  while ( (n=XREF_NEXT(p)) && 0 == unlinkObj(n->obj, 0) )
                      /* nothing else to do */;
-             } while ( p = n ); /* reached a system module; skip */
+             } while ( (p = n) ); /* reached a system module; skip */
          }
          if ( verbose & DEBUG_UNLINK )
              fprintf(logf,"done.\n");
@@ -1340,6 +1340,7 @@
              }
          }
      }
+    return 0;
  }
  
  static DepWalkAction	depwalkAction   = 0;
@@ -1603,7 +1604,7 @@
  ObjF	objb=*(ObjF*)b;
  int		rval;
  
-     if (rval = strcmp(obja->name, objb->name))
+     if ((rval = strcmp(obja->name, objb->name)))
          return rval;
  
      if (MATCH_ANY == obja->lib  || MATCH_ANY == objb->lib)
@@ -1629,7 +1630,7 @@
  ObjF f;
  int  i;
  
-     assert( rval = malloc(numFiles * sizeof(*rval)) );
+     assert( (rval = malloc(numFiles * sizeof(*rval))) );
      for ( i=0, f = fileListHead; f; i++, f=f->next) {
          rval[i] = f;
      }
@@ -1930,7 +1931,7 @@
      if ( pstripped ) {
          *pstripped = strdup(sname);
  #ifdef LINKER_VERSION_SEPARATOR
-         if ( chpt = strchr(*pstripped, LINKER_VERSION_SEPARATOR) ) {
+         if ( (chpt = strchr(*pstripped, LINKER_VERSION_SEPARATOR)) ) {
              *chpt = 0;
          }
  #endif
@@ -2208,6 +2209,7 @@
              }
          }
      } while ( fgets(buf, MAXBUF, stdin) && *buf && strcmp(buf,".\n") );
+    return 0;
  }
  
  #define OPT_SHOW_DEPS		(1<<0)
