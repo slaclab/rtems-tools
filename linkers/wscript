@@ -192,6 +192,17 @@ def build(bld):
                 cflags = conf['cflags'] + conf['warningflags'],
                 linkflags = conf['linkflags'],
                 use = ['LIBERTY', 'BFD'])
+    
+    #
+    # Build the ldep tool
+    #
+    bld.program(target='rtems-ldep',
+                source = ['ldep/ldep.c'],
+                defines = defines,
+                includes = ['.'],
+                cflags = conf['cflags'] + conf['warningflags'],
+                linkflags = conf['linkflags'],
+                use = [])
 
 def tags(ctx):
     ctx.exec_command('etags $(find . -name \\*.[sSch])', shell = True)
