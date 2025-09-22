@@ -627,7 +627,9 @@ int                         fltflags=0;
 			fprintf(ofeil,"\t\t.value.type =%s,\n",    t);
 			fprintf(ofeil,"\t\t.size       =%s,\n",    sbuf);
 			fprintf(ofeil,"\t\t.flags      =0");
-				if ( BSF_GLOBAL & f )
+			    /* weak symbols are always global; earlier BFD added BSF_GLOBAL for us, but that was
+				 * dropped in recent versions */
+				if ( BSF_GLOBAL & f || BSF_WEAK & f )
 					fprintf(ofeil,"|CEXP_SYMFLG_GLBL");
 				if ( (BSF_WEAK  & f) &&
 				     /* weak in CEXP gets overridden by this table */
