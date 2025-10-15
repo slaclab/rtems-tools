@@ -69,7 +69,7 @@
 #include <pmbfd.h>
 #undef HAVE_ELF_BFD_H
 #else
-#include <libiberty.h>
+#include <libiberty/libiberty.h>
 #include <bfd.h>
 #endif
 
