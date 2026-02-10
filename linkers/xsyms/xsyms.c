@@ -667,7 +667,7 @@ int                         fltflags=0;
 							bfd_get_section_vma(obfd,bfd_get_section(osyms[i]));
 		osyms[i]->flags   = isyms[i]->flags;
 		osyms[i]->name    = isyms[i]->name;
-		bfd_copy_private_symbol_data(ibfd,isyms[i],obfd,osyms[i]);
+		bfd_copy_private_symbol_data(ibfd,(asymbol**)isyms[i],obfd,(asymbol**)osyms[i]);
 	}
 
 	bfd_set_symtab(obfd,osyms,nsyms);
