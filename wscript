@@ -29,6 +29,8 @@
 #
 
 import os.path
+import re
+import subprocess
 
 import wafwindows
 
@@ -104,6 +106,18 @@ def configure(ctx):
     ctx.find_program('python', mandatory = False)
     ctx.find_program('python2', mandatory = False)
     ctx.find_program('python3', mandatory = False)
+
+    # Determine bintuils version and add it as a preprocessor define. The BFD headers have no version macros!
+    ctx.find_program('objdump', mandatory=True)
+    ctx.start_msg('Binutils version')
+    s = subprocess.run([ctx.env.OBJDUMP[0], '-V'], capture_output=True).stdout.decode()
+    match = re.findall(r'([0-9]+)\.([0-9]+).*$', s.splitlines()[0])
+    if match is None:
+        print('Could not determine bintuils version...')
+        raise RuntimeError()
+    ctx.env.C_OPTS += [f'-DBINUTILS_MAJOR={match[0][0]}', f'-DBINUTILS_MINOR={match[0][1]}']
+    ctx.end_msg(f'{match[0][0]}.{match[0][1]}')
+
     #
     # Installing the PYO,PYC seems broken on 1.8.19. The path is wrong.
     #
