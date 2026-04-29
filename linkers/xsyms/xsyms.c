@@ -667,7 +667,13 @@ int                         fltflags=0;
 							bfd_get_section_vma(obfd,bfd_get_section(osyms[i]));
 		osyms[i]->flags   = isyms[i]->flags;
 		osyms[i]->name    = isyms[i]->name;
-		bfd_copy_private_symbol_data(ibfd,(asymbol**)isyms[i],obfd,(asymbol**)osyms[i]);
+		asymbol* isym = isyms[i];
+		asymbol* osym = osyms[i];
+	#if BINUTILS_MAJOR >= 2 && BINUTILS_MINOR >= 46
+		bfd_copy_private_symbol_data(ibfd,&isym,obfd,&osym);
+	#else
+		bfd_copy_private_symbol_data(ibfd,isym,obfd,osym);
+	#endif
 	}
 
 	bfd_set_symtab(obfd,osyms,nsyms);
