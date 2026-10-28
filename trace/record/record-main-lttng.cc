@@ -46,8 +46,8 @@
 #include <vector>
 
 #ifdef HAVE_LLVM_DEBUGINFO_SYMBOLIZE_SYMBOLIZE_H
-#include <llvm/DebugInfo/Symbolize/Symbolize.h>
-#include <llvm/Support/Path.h>
+#include <DebugInfo/Symbolize/Symbolize.h>
+#include <Support/Path.h>
 #endif
 
 #ifdef _WIN32

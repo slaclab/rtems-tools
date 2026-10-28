@@ -42,9 +42,11 @@ def configure(conf):
     else:
         conf.env.append_value('CXXFLAGS', '-std=c++11')
     try:
+        incdir = '-I' + conf.cmd_and_log(['llvm-config', '--includedir'])
         cppflags = conf.cmd_and_log(['llvm-config', '--cppflags'])
         ldflags = conf.cmd_and_log(['llvm-config', '--ldflags'])
-        conf.env.append_value('CPPFLAGS', cppflags.split())
+        # Use the 'llvm' subdir in the include directory, otherwise we pick up llvm's own cxxabi.h (conflicts with gcc)
+        conf.env.append_value('CPPFLAGS', cppflags.split().remove(incdir) + [incdir + '/llvm'])
         conf.env.append_value('LDFLAGS', ldflags.split())
     except:
         pass
